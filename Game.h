@@ -5,15 +5,27 @@
 #include <iostream>
 
 class Game {
-    Square board[9];
+    /* Square board[9]; */
+    Square **board;
+    int count;
     bool playerX;
     bool AI;
 
+    bool filled;
+
+
     void AIMove() {
         if (!playerX) {
-            for (int i = 0; i < 9; i++) {
-                if (board[i].isEmpty()) {
-                    board[i].playO();
+            for (int i = 0; i < count; i++) {
+                filled = false;
+                for(int j = 0; j < count; j++){
+                    if(board[i][j].isEmpty()){
+                        board[i][j].playO();
+                        filled = true;
+                        break;
+                    }
+                }
+                if(filled == true){
                     break;
                 }
             }
@@ -21,23 +33,41 @@ class Game {
         }
     }
 
+    void init(){
+        board = new Square*[count];
+        for(int i = 0; i < count; i++){
+            board[i] = new Square[count];
+        }
+
+        float x = -0.9;
+        float y = 0.9;
+
+        float size = 1.8 / count;
+
+        for (int i = 0; i < count; i++){
+            x = -0.9;
+            for (int j = 0; j < count; j++){
+                board[i][j] = Square(x, y, size);
+                x += size;
+            }
+            y -= size;
+        }
+    }
+
+
 public:
     Game() {
-        board[0] = Square(-0.9f, 0.9f, 0.6f);
-        board[1] = Square(-0.3f, 0.9f, 0.6f);
-        board[2] = Square(0.3f, 0.9f, 0.6f);
 
-        board[3] = Square(-0.9f, 0.3f, 0.6f);
-        board[4] = Square(-0.3f, 0.3f, 0.6f);
-        board[5] = Square(0.3f, 0.3f, 0.6f);
+        count = 3;
+        init();
 
-        board[6] = Square(-0.9f, -0.3f, 0.6f);
-        board[7] = Square(-0.3f, -0.3f, 0.6f);
-        board[8] = Square(0.3f, -0.3f, 0.6f);
+       
 
         playerX = true;
         AI = false;
     }
+
+    
 
     void AIOn() {
         AI = true;
@@ -63,18 +93,28 @@ public:
     }
 
     void handleMouseClick(float x, float y) {
-        for (int i = 0; i < 9; i++) {
-            if (board[i].contains(x,  y)) {
-                if (board[i].isEmpty()) {
-                    if (playerX) {
-                        board[i].playX();
-                    } else {
-                        board[i].playO();
+        for (int i = 0; i < count; i++) {
+            filled = false;
+            for(int z = 0; z < count; z++){
+                if (board[i][z].contains(x,  y)) {
+                    if (board[i][z].isEmpty()) {
+                        if (playerX) {
+                            board[i][z].playX();
+                            filled = true;
+
+                        } else {
+                            board[i][z].playO();
+                            filled = true;
+                        }
+                        playerX = !playerX;
+                        break;
                     }
-                    playerX = !playerX;
-                    break;
                 }
             }
+            if(filled == true){
+                break;
+            }
+
         }
 
         if (AI) {
@@ -83,8 +123,10 @@ public:
     }
 
     void draw() {
-        for (int i = 0; i < 9; i++) {
-            board[i].draw();
+        for (int i = 0; i < count; i++) {
+            for(int j = 0; j < count; j++){
+                board[i][j].draw();
+            }
         }
     }
 };
