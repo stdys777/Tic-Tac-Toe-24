@@ -35,6 +35,10 @@ public:
         state = PLAYER_X;
     }
 
+    bool isSelected(){
+        return state;
+    }
+
     void playO() {
         state = PLAYER_O;
     }

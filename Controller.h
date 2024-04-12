@@ -4,16 +4,18 @@
 #include <GL/gl.h>
 #include "AppController.h"
 #include "Game.h"
+#include "Button.h"
 
 class Controller : public AppController {
     Game game;
+    
 
 public:
 
     Controller(){
-        game.AIOn();
-        game.playerOFirst();
-        game.start();
+        // game.AIOn();
+        // game.playerOFirst();
+        // game.start();
     }
 
     void leftMouseDown(float x, float y) {
