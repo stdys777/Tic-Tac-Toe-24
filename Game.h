@@ -146,20 +146,34 @@ public:
 
 
     void handleMouseClick(float x, float y) {
+        if(winner == false){
+            for (int i = 0; i < count; i++) {
+                filled = false;
+                for(int z = 0; z < count; z++){
+                    if (board[i][z].contains(x,  y)) {
+                        if (board[i][z].isEmpty()) {
+                            if (playerX) {
+                                board[i][z].playX();
+                                filled = true;
 
-        if(filled == true){
-            for(int i = 0; i < count; i++){
-                int seen = 0;
-                for(int j = 0; j < count; j++){
-                    if(board[i][j].isSelected() == PLAYER_X){
-                        seen++;
-                    }
+                            } else {
+                                board[i][z].playO();
+                                filled = true;
+                            }
+                            playerX = !playerX;
+                            break;
+                        } 
+                    } 
                 }
-                if(seen == count){
-                    winner = true;
+                if(filled == true){
                     break;
                 }
+
             }
+        } 
+
+        if(filled == true){
+            winX();
         }
 
         if(button3.contains(x, y)){
@@ -207,6 +221,7 @@ public:
             AI = true;
             
         } else if (playAgain.contains(x, y)){
+            // exit(0); stop openGl app
             winner = false;
             for(int i = 0; i < count; i++){
                 delete[] board[i];
@@ -227,39 +242,58 @@ public:
 
 
     void winX(){
-        // int seen;
-        // seen = 0;
-        // for(int i = 0; i < count; i++){
-        //     if(seen == count){
-        //         break;
-        //     }
-        //     if(board[i]->isSelected() == PLAYER_X){
-        //         seen++;
-        //     }
-        // }
-        // if(seen == count){
-        //     winner = true;
-        //     seen = 0;
-        // }
-        // seen = 0;
-
-        int seen;
         for(int i = 0; i < count; i++){
-            seen = 0;
-            for(int j = 0; j < count; j++){
-                if(board[i][j].isSelected() == PLAYER_X){
-                    seen++;
+            int xCount = 0;
+            for(int z = 0; z < count; z++){
+                if(board[i][z].getPlayer() == PLAYER_X){
+                    xCount++;
                 }
             }
-            if(seen == count){
+            if(xCount == count){
                 winner = true;
-                return;
+                break;
             }
         }
-        winner = false;
 
+        for(int i = 0; i < count; i++){
+            int xCount = 0;
+            for(int z = 0; z < count; z++){
+                if(board[z][i].getPlayer() == PLAYER_X){
+                    xCount++;
+                }
+            }
+            if(xCount == count){
+                winner = true;
+                break;
+            }
+        }
+
+        int xCount = 0;
+        for(int i = 0; i < count; i++){
+            if(board[i][i].getPlayer() == PLAYER_X){
+                xCount++;
+            }
+            if(xCount == count){
+                winner = true;
+                xCount = 0;
+                break;
+            }
+        }
+        int xCounts = 0;
+        for(int i = 0; i < count; i++){
+            if(board[count - 1 - i][i].getPlayer() == PLAYER_X){
+                xCounts++;
+            }
+            if(xCounts == count){
+                winner = true;
+                xCounts = 0;
+                break;
+            }
+        }
+    
+    
     }
-
+ 
 
     void draw() {
         if(winner == true){

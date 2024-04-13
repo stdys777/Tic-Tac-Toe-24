@@ -35,6 +35,10 @@ public:
         state = PLAYER_X;
     }
 
+    SquareState getPlayer() {
+        return state;
+    }
+
     bool isSelected(){
         return state;
     }
