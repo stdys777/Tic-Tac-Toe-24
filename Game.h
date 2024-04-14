@@ -14,6 +14,7 @@ class Game {
     bool AI;
 
     bool winner;
+    bool winnerO;
 
     bool filled;
    
@@ -24,7 +25,9 @@ class Game {
     Button button4;
     Button button5;
     Button win;
+    Button winO;
     Button playAgain;
+    Button quit;
 
     bool clicked1;
     bool clicked2;
@@ -35,7 +38,7 @@ class Game {
 
 
     void AIMove() {
-        /* if(winner == false){
+        if(winner == false || winnerO == false){
             if (!playerX) {
                 for (int i = 0; i < count; i++) {
                     filled = false;
@@ -47,28 +50,17 @@ class Game {
                         }
                     }
                     if(filled == true){
+                        winX();
+                        oWinner();
+                    }
+                    if(filled == true){
                         break;
                     }
                 }
                 playerX = !playerX;
             }
-        } */
-        if (!playerX) {
-            for (int i = 0; i < count; i++) {
-                filled = false;
-                for(int j = 0; j < count; j++){
-                    if(board[i][j].isEmpty()){
-                        board[i][j].playO();
-                        filled = true;
-                        break;
-                    }
-                }
-                if(filled == true){
-                    break;
-                }
-            }
-            playerX = !playerX;
         }
+    
     }
 
     void init(){
@@ -105,13 +97,17 @@ public:
 
 
 
-        win = Button("win", 0, 0);
+        win = Button("winner X", 0, 0);
+        winO = Button ("winner O", 0, 0.1);
         playAgain = Button("Play Again", 0.5, -0.5);
+        quit = Button("Quit", 0.7, -0.8);
 
     
 
         count = 3;
         init();
+
+        
 
        
 
@@ -146,7 +142,7 @@ public:
 
 
     void handleMouseClick(float x, float y) {
-        if(winner == false){
+        if(winner == false || winnerO == false){
             for (int i = 0; i < count; i++) {
                 filled = false;
                 for(int z = 0; z < count; z++){
@@ -174,6 +170,7 @@ public:
 
         if(filled == true){
             winX();
+            oWinner();
         }
 
         if(button3.contains(x, y)){
@@ -223,6 +220,7 @@ public:
         } else if (playAgain.contains(x, y)){
             // exit(0); stop openGl app
             winner = false;
+            winnerO = false;
             for(int i = 0; i < count; i++){
                 delete[] board[i];
             }
@@ -230,6 +228,8 @@ public:
             count = 3;
             clicked3 = false;
             init();
+        } else if(quit.contains(x,y)){
+            exit(0);
         }
         
 
@@ -293,13 +293,70 @@ public:
     
     
     }
+
+    void oWinner(){
+        for(int i = 0; i < count; i++){
+            int xCount = 0;
+            for(int z = 0; z < count; z++){
+                if(board[i][z].getPlayer() == PLAYER_O){
+                    xCount++;
+                }
+            }
+            if(xCount == count){
+                winnerO = true;
+                break;
+            }
+        }
+
+        for(int i = 0; i < count; i++){
+            int xCount = 0;
+            for(int z = 0; z < count; z++){
+                if(board[z][i].getPlayer() == PLAYER_O){
+                    xCount++;
+                }
+            }
+            if(xCount == count){
+                winnerO = true;
+                break;
+            }
+        }
+
+        int xCount = 0;
+        for(int i = 0; i < count; i++){
+            if(board[i][i].getPlayer() == PLAYER_O){
+                xCount++;
+            }
+            if(xCount == count){
+                winnerO = true;
+                xCount = 0;
+                break;
+            }
+        }
+        int xCounts = 0;
+        for(int i = 0; i < count; i++){
+            if(board[count - 1 - i][i].getPlayer() == PLAYER_O){
+                xCounts++;
+            }
+            if(xCounts == count){
+                winnerO = true;
+                xCounts = 0;
+                break;
+            }
+        }
+    }
  
 
     void draw() {
         if(winner == true){
             win.draw();
             playAgain.draw();
-        } else if(winner == false){
+            quit.draw();
+        } else if(winnerO == true){
+            winO.draw();
+            playAgain.draw();
+            quit.draw();
+        }
+        else if(winner == false){
             button3.draw();
             button4.draw();
             button5.draw();
