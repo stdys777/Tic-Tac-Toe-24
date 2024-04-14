@@ -15,6 +15,7 @@ class Game {
 
     bool winner;
     bool winnerO;
+    bool tieOutcome;
 
     bool filled;
    
@@ -28,6 +29,7 @@ class Game {
     Button winO;
     Button playAgain;
     Button quit;
+    Button tieGame;
 
     bool clicked1;
     bool clicked2;
@@ -94,6 +96,7 @@ public:
         button3 = Button("3 x 3", -0.9, -0.75);
         button4 = Button("4 x 4", -0.5, -0.75);
         button5 = Button("5 x 5", -0.1, -0.75);
+        tieGame = Button("Tie", -0.1, 0);
 
 
 
@@ -101,6 +104,7 @@ public:
         winO = Button ("winner O", 0, 0.1);
         playAgain = Button("Play Again", 0.5, -0.5);
         quit = Button("Quit", 0.7, -0.8);
+        
 
     
 
@@ -142,7 +146,7 @@ public:
 
 
     void handleMouseClick(float x, float y) {
-        if(winner == false || winnerO == false){
+        if(winner == false || winnerO == false || tieOutcome == false){
             for (int i = 0; i < count; i++) {
                 filled = false;
                 for(int z = 0; z < count; z++){
@@ -171,6 +175,7 @@ public:
         if(filled == true){
             winX();
             oWinner();
+            tie();
         }
 
         if(button3.contains(x, y)){
@@ -221,6 +226,7 @@ public:
             // exit(0); stop openGl app
             winner = false;
             winnerO = false;
+            tieOutcome = false;
             for(int i = 0; i < count; i++){
                 delete[] board[i];
             }
@@ -238,6 +244,22 @@ public:
         }
 
 
+    }
+
+    void tie(){
+        int row = 0;
+        int column = 0;
+        for(int i = 0; i < count; i++){
+            for(int z = 0; z < count; z++){
+                if(board[i][z].getPlayer() == PLAYER_X || board[i][z].getPlayer() == PLAYER_O){
+                    column++;
+                }
+            }
+            if(column == count * count){
+                tieOutcome = true;
+                break;
+            }
+        }
     }
 
 
@@ -355,8 +377,12 @@ public:
             winO.draw();
             playAgain.draw();
             quit.draw();
+        } else if(tieOutcome == true){
+            tieGame.draw();
+            playAgain.draw();
+            quit.draw();
         }
-        else if(winner == false){
+        else if(winner == false || winnerO == false || tieOutcome == false){
             button3.draw();
             button4.draw();
             button5.draw();
