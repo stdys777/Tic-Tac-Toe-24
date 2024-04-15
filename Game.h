@@ -30,6 +30,7 @@ class Game {
     Button playAgain;
     Button quit;
     Button tieGame;
+    Button begin;
 
     bool clicked1;
     bool clicked2;
@@ -99,7 +100,7 @@ public:
         tieGame = Button("Tie", -0.1, 0);
 
 
-
+        begin = Button("click a board size to begin", -1,-0.40);
         win = Button("winner X", 0, 0);
         winO = Button ("winner O", 0, 0.1);
         playAgain = Button("Play Again", 0.5, -0.5);
@@ -233,6 +234,8 @@ public:
             delete[] board;
             count = 3;
             clicked3 = false;
+            clicked4 = false;
+            clicked5 = false;
             init();
         } else if(quit.contains(x,y)){
             exit(0);
@@ -247,7 +250,6 @@ public:
     }
 
     void tie(){
-        int row = 0;
         int column = 0;
         for(int i = 0; i < count; i++){
             for(int z = 0; z < count; z++){
@@ -381,14 +383,24 @@ public:
             tieGame.draw();
             playAgain.draw();
             quit.draw();
+        // } else if(clicked3 == false ){
+        //     begin.draw();
+        //     button3.draw();
+        //     button4.draw();
+        //     button5.draw();
+        //     button1.draw();
+        //     button2.draw();
         }
         else if(winner == false || winnerO == false || tieOutcome == false){
+            button1.draw();
+            button2.draw();
             button3.draw();
             button4.draw();
             button5.draw();
+            begin.draw();
             if(clicked3 == true || clicked4 == true || clicked5 == true){
-                button1.draw();
-                button2.draw();
+                // button1.draw();
+                // button2.draw();
                 for (int i = 0; i < count; i++) {
                     for(int j = 0; j < count; j++){
                         board[i][j].draw();
@@ -397,8 +409,6 @@ public:
             }
            
         }
-
-        
     }
 };
 
